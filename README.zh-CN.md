@@ -75,7 +75,7 @@ python -m pytest -q
 
 本地构建入口：
 
-- GUI: `.\packaging\build_exe.bat`
+- GUI: `.\packaging\build_gui_exe.bat`
 - CLI: `.\packaging\build_cli_exe.bat`
 
 更多打包说明可参考：

@@ -2,7 +2,7 @@
 chcp 65001 >nul
 pushd "%~dp0\.."
 echo ========================================
-echo GifMaker CLI - Build Script
+echo GifMaker GUI - Build Script
 echo ========================================
 echo.
 
@@ -17,14 +17,12 @@ if errorlevel 1 (
 echo.
 
 echo [2/3] Building executable...
-pyinstaller ".\packaging\GifMaker-CLI.spec" --noconfirm --distpath ".\dist" --workpath ".\build"
+pyinstaller ".\packaging\GifMaker-GUI.spec" --noconfirm --distpath ".\dist" --workpath ".\build"
 
 echo.
 echo [3/3] Build complete.
 echo.
-echo Output: dist\GifMaker-CLI.exe
-echo.
-echo Note: the CLI build is intended to run in a terminal.
+echo Output: dist\GifMaker-GUI.exe
 echo.
 popd
 pause

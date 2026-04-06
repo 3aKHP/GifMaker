@@ -25,7 +25,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='频闪梗图生成器',
+    name='GifMaker-GUI',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

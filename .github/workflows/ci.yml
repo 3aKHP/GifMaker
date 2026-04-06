@@ -83,16 +83,16 @@ jobs:
         run: .\.venv\Scripts\python -m pytest -q
 
       - name: Build CLI executable
-        run: .\.venv\Scripts\python -m PyInstaller .\packaging\频闪梗图生成器-CLI.spec --noconfirm --distpath .\dist-ci --workpath .\build-ci
+        run: .\.venv\Scripts\python -m PyInstaller .\packaging\GifMaker-CLI.spec --noconfirm --distpath .\dist-ci --workpath .\build-ci
 
       - name: Build GUI executable
-        run: .\.venv\Scripts\python -m PyInstaller .\packaging\频闪梗图生成器.spec --noconfirm --distpath .\dist-ci --workpath .\build-ci
+        run: .\.venv\Scripts\python -m PyInstaller .\packaging\GifMaker-GUI.spec --noconfirm --distpath .\dist-ci --workpath .\build-ci
 
       - name: Upload Windows build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-executables
           path: |
-            dist-ci/频闪梗图生成器.exe
-            dist-ci/频闪梗图生成器-CLI.exe
+            dist-ci/GifMaker-GUI.exe
+            dist-ci/GifMaker-CLI.exe
           if-no-files-found: error

@@ -25,7 +25,7 @@ pip install pyinstaller
 ### 2. 基础打包命令
 
 ```bash
-pyinstaller --onefile --console --name "频闪梗图生成器-CLI" src/strobe_meme_cli.py
+pyinstaller --onefile --console --name "GifMaker-CLI" src/strobe_meme_cli.py
 ```
 
 ### 3. 高级打包命令（轻量化）
@@ -34,7 +34,7 @@ pyinstaller --onefile --console --name "频闪梗图生成器-CLI" src/strobe_me
 pyinstaller --noconfirm ^
     --onefile ^
     --console ^
-    --name "频闪梗图生成器-CLI" ^
+    --name "GifMaker-CLI" ^
     --exclude-module tkinter ^
     --exclude-module imageio ^
     --exclude-module numpy ^
@@ -77,7 +77,7 @@ python src/strobe_meme_cli.py
 ### 运行打包后的exe
 
 ```bash
-频闪梗图生成器-CLI.exe
+GifMaker-CLI.exe
 ```
 
 或直接双击exe文件。
@@ -173,7 +173,7 @@ pip install pillow pyinstaller
 ```batch
 @echo off
 echo 正在生成梗图...
-频闪梗图生成器-CLI.exe
+GifMaker-CLI.exe
 echo 完成！
 pause
 ```
@@ -197,7 +197,7 @@ args = parser.parse_args()
 然后可以这样使用：
 
 ```bash
-频闪梗图生成器-CLI.exe --text "白{神/区}{神/区}了" --mode graycode --format gif --output output.gif
+GifMaker-CLI.exe --text "白{神/区}{神/区}了" --mode graycode --format gif --output output.gif
 ```
 
 ## 性能优化
@@ -244,7 +244,7 @@ python strobe_meme_cli.py
 ```batch
 @echo off
 for %%f in (*.txt) do (
-    频闪梗图生成器-CLI.exe --text "%%f"
+    GifMaker-CLI.exe --text "%%f"
 )
 ```
 

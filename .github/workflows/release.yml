@@ -40,19 +40,32 @@ jobs:
         run: .\.venv\Scripts\python -m pytest -q
 
       - name: Build CLI executable
-        run: .\.venv\Scripts\python -m PyInstaller .\packaging\频闪梗图生成器-CLI.spec --noconfirm --distpath .\dist-release --workpath .\build-release
+        run: .\.venv\Scripts\python -m PyInstaller .\packaging\GifMaker-CLI.spec --noconfirm --distpath .\dist-release --workpath .\build-release
 
       - name: Build GUI executable
-        run: .\.venv\Scripts\python -m PyInstaller .\packaging\频闪梗图生成器.spec --noconfirm --distpath .\dist-release --workpath .\build-release
+        run: .\.venv\Scripts\python -m PyInstaller .\packaging\GifMaker-GUI.spec --noconfirm --distpath .\dist-release --workpath .\build-release
 
       - name: Upload release artifacts
         uses: actions/upload-artifact@v4
         with:
           name: release-executables
           path: |
-            dist-release/频闪梗图生成器.exe
-            dist-release/频闪梗图生成器-CLI.exe
+            dist-release/GifMaker-GUI.exe
+            dist-release/GifMaker-CLI.exe
           if-no-files-found: error
+
+      - name: Prepare release asset names
+        run: |
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $tag = "${{ inputs.release_tag }}"
+          }
+          else {
+            $tag = "${{ github.ref_name }}"
+          }
+
+          New-Item -ItemType Directory -Path .\release-assets -Force | Out-Null
+          Copy-Item .\dist-release\GifMaker-GUI.exe ".\release-assets\GifMaker-GUI-$tag.exe" -Force
+          Copy-Item .\dist-release\GifMaker-CLI.exe ".\release-assets\GifMaker-CLI-$tag.exe" -Force
 
       - name: Publish GitHub Release
         env:
@@ -65,8 +78,8 @@ jobs:
             $tag = "${{ github.ref_name }}"
           }
           $assets = @(
-            ".\dist-release\频闪梗图生成器.exe",
-            ".\dist-release\频闪梗图生成器-CLI.exe"
+            ".\release-assets\GifMaker-GUI-$tag.exe",
+            ".\release-assets\GifMaker-CLI-$tag.exe"
           )
 
           gh release view $tag *> $null

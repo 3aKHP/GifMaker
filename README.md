@@ -75,7 +75,7 @@ python -m pytest -q
 
 Local build entry points:
 
-- GUI: `.\packaging\build_exe.bat`
+- GUI: `.\packaging\build_gui_exe.bat`
 - CLI: `.\packaging\build_cli_exe.bat`
 
 Additional packaging notes:
