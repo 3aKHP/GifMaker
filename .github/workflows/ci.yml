@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Create virtual environment
+        run: python -m venv .venv
+
+      - name: Install dependencies on Windows
+        if: runner.os == 'Windows'
+        run: |
+          .\.venv\Scripts\python -m pip install --upgrade pip
+          .\.venv\Scripts\python -m pip install -r requirements.txt pytest
+
+      - name: Install dependencies on Linux
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install -r requirements.txt pytest
+
+      - name: Run tests on Windows
+        if: runner.os == 'Windows'
+        run: .\.venv\Scripts\python -m pytest -q
+
+      - name: Run tests on Linux
+        if: runner.os != 'Windows'
+        shell: bash
+        run: .venv/bin/python -m pytest -q
+
+  build-windows:
+    name: Build Windows executables
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Create virtual environment
+        run: python -m venv .venv
+
+      - name: Install build dependencies
+        run: |
+          .\.venv\Scripts\python -m pip install --upgrade pip
+          .\.venv\Scripts\python -m pip install -r requirements.txt pytest pyinstaller
+
+      - name: Run tests before packaging
+        run: .\.venv\Scripts\python -m pytest -q
+
+      - name: Build CLI executable
+        run: .\.venv\Scripts\python -m PyInstaller .\packaging\频闪梗图生成器-CLI.spec --noconfirm --distpath .\dist-ci --workpath .\build-ci
+
+      - name: Build GUI executable
+        run: .\.venv\Scripts\python -m PyInstaller .\packaging\频闪梗图生成器.spec --noconfirm --distpath .\dist-ci --workpath .\build-ci
+
+      - name: Upload Windows build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-executables
+          path: |
+            dist-ci/频闪梗图生成器.exe
+            dist-ci/频闪梗图生成器-CLI.exe
+          if-no-files-found: error

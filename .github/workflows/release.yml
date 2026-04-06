@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag to create or update, for example v0.1.0"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Create virtual environment
+        run: python -m venv .venv
+
+      - name: Install release dependencies
+        run: |
+          .\.venv\Scripts\python -m pip install --upgrade pip
+          .\.venv\Scripts\python -m pip install -r requirements.txt pytest pyinstaller
+
+      - name: Run tests
+        run: .\.venv\Scripts\python -m pytest -q
+
+      - name: Build CLI executable
+        run: .\.venv\Scripts\python -m PyInstaller .\packaging\频闪梗图生成器-CLI.spec --noconfirm --distpath .\dist-release --workpath .\build-release
+
+      - name: Build GUI executable
+        run: .\.venv\Scripts\python -m PyInstaller .\packaging\频闪梗图生成器.spec --noconfirm --distpath .\dist-release --workpath .\build-release
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-executables
+          path: |
+            dist-release/频闪梗图生成器.exe
+            dist-release/频闪梗图生成器-CLI.exe
+          if-no-files-found: error
+
+      - name: Publish GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $tag = "${{ inputs.release_tag }}"
+          }
+          else {
+            $tag = "${{ github.ref_name }}"
+          }
+          $assets = @(
+            ".\dist-release\频闪梗图生成器.exe",
+            ".\dist-release\频闪梗图生成器-CLI.exe"
+          )
+
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag $assets --clobber
+          }
+          else {
+            gh release create $tag $assets --title $tag --generate-notes
+          }

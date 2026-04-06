@@ -42,6 +42,19 @@ python .\src\strobe_meme_cli.py
 
 更详细的说明见 [docs/打包说明.md](docs/打包说明.md) 和 [docs/CLI打包说明.md](docs/CLI打包说明.md)。
 
+## CI/CD
+
+- CI: GitHub Actions 会在推送到 `main/master` 或发起 PR 时自动创建 `.venv`、安装依赖、运行测试，并在 Windows runner 上验证 GUI/CLI 打包。
+- CD: 当推送形如 `v0.1.0` 的 tag 时，GitHub Actions 会自动构建两个 `.exe` 并创建对应的 GitHub Release。
+- 也可以在 GitHub Actions 页面手动触发 `Release` workflow，并填写一个 `release_tag` 来生成或更新 Release。
+
+常用发布流程：
+
+```powershell
+git tag v0.1.0
+git push origin v0.1.0
+```
+
 ## 快速审阅结论
 
 - 项目已经具备完整的 GUI/CLI 主流程、导出 GIF/WebP 和 PyInstaller 打包脚本。
