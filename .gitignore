@@ -1,5 +1,6 @@
 .venv/
 venv/
+.pytest_cache/
 __pycache__/
 *.py[cod]
 *.pyo
@@ -8,6 +9,8 @@ __pycache__/
 
 build/
 dist/
+build-*/
+dist-*/
 *.spec.bak
 
 .idea/
