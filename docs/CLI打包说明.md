@@ -28,7 +28,7 @@ pip install pyinstaller
 pyinstaller --onefile --console --name "频闪梗图生成器-CLI" src/strobe_meme_cli.py
 ```
 
-### 3. 高级打包命令（包含字体）
+### 3. 高级打包命令（轻量化）
 
 ```bash
 pyinstaller --noconfirm ^
@@ -48,7 +48,6 @@ pyinstaller --noconfirm ^
 - `--onefile`: 打包成单个exe文件
 - `--console`: 显示控制台窗口（控制台程序必需）
 - `--name`: 指定exe文件名
-- `--hidden-import`: 添加隐藏导入
 - `--exclude-module`: 排除误收集的大型依赖
 
 ### 5. 输出位置

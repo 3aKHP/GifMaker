@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-project_root = Path.cwd().resolve()
+project_root = Path(SPEC).resolve().parent.parent
 
 a = Analysis(
     [str(project_root / 'src' / 'strobe_meme_cli.py')],
