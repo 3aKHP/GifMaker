@@ -35,8 +35,11 @@ pyinstaller --noconfirm ^
     --onefile ^
     --console ^
     --name "频闪梗图生成器-CLI" ^
-    --add-data "C:/Windows/Fonts/simhei.ttf;." ^
-    --hidden-import=PIL._tkinter_finder ^
+    --exclude-module tkinter ^
+    --exclude-module imageio ^
+    --exclude-module numpy ^
+    --exclude-module matplotlib ^
+    --exclude-module cv2 ^
     src/strobe_meme_cli.py
 ```
 
@@ -45,8 +48,8 @@ pyinstaller --noconfirm ^
 - `--onefile`: 打包成单个exe文件
 - `--console`: 显示控制台窗口（控制台程序必需）
 - `--name`: 指定exe文件名
-- `--add-data`: 添加额外文件（字体）
 - `--hidden-import`: 添加隐藏导入
+- `--exclude-module`: 排除误收集的大型依赖
 
 ### 5. 输出位置
 
@@ -57,7 +60,7 @@ pyinstaller --noconfirm ^
 | 特性 | GUI版本 | 控制台版本 |
 |------|---------|-----------|
 | 界面 | 图形界面 | 命令行界面 |
-| 依赖 | Tkinter | 无GUI依赖 |
+| 依赖 | Tkinter + Pillow | Pillow |
 | 文件大小 | 较大 | 较小 |
 | 预览功能 | ✅ 动画预览 | ❌ 无预览 |
 | 交互方式 | 鼠标点击 | 键盘输入 |
@@ -148,17 +151,20 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 ### Q4: 打包后文件太大
 
 **解决方案**:
-1. 使用虚拟环境，只安装必要的包：
+1. 使用干净的 `venv`，只安装必要的包：
 ```bash
-conda create -n cli_meme python=3.10
-conda activate cli_meme
-pip install pillow imageio
+py -3.10 -m venv .venv-pack
+.venv-pack\Scripts\activate
+pip install pillow pyinstaller
 ```
 
 2. 排除不需要的模块：
 ```bash
 --exclude-module tkinter
 --exclude-module matplotlib
+--exclude-module imageio
+--exclude-module numpy
+--exclude-module cv2
 ```
 
 ## 批处理脚本示例
@@ -208,7 +214,7 @@ pyinstaller --upx-dir=upx路径 ...
 ### 2. 加快启动速度
 
 控制台版本已经比GUI版本快很多，因为：
-- 无需加载Tkinter
+- 无需加载 Tkinter
 - 无需初始化GUI组件
 - 启动时间更短
 

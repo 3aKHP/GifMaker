@@ -10,7 +10,6 @@ import random
 import re
 import warnings
 
-import imageio
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -200,11 +199,25 @@ class StrobeMemeGenerator:
 
     def save_as_gif(self, frames: List[Image.Image], output_path: str, duration: float = 0.02):
         """保存为 GIF"""
-        imageio.mimsave(output_path, frames, duration=duration, loop=0)
+        if not frames:
+            raise ValueError("frames 不能为空")
+
+        duration_ms = max(int(round(duration * 1000)), 20)
+        frames[0].save(
+            output_path,
+            format="GIF",
+            save_all=True,
+            append_images=frames[1:],
+            duration=duration_ms,
+            loop=0,
+        )
         print(f"GIF已生成: {Path(output_path)}")
 
     def save_as_webp(self, frames: List[Image.Image], output_path: str, duration: int = 33):
         """保存为 WebP"""
+        if not frames:
+            raise ValueError("frames 不能为空")
+
         frames[0].save(
             output_path,
             format="WEBP",

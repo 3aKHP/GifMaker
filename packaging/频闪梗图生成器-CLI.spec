@@ -2,20 +2,18 @@
 
 from pathlib import Path
 
-project_root = Path(__file__).resolve().parent.parent
-font_path = Path("C:/Windows/Fonts/simhei.ttf")
-datas = [(str(font_path), ".")] if font_path.exists() else []
+project_root = Path.cwd().resolve()
 
 a = Analysis(
     [str(project_root / 'src' / 'strobe_meme_cli.py')],
     pathex=[str(project_root)],
     binaries=[],
-    datas=datas,
-    hiddenimports=['PIL._tkinter_finder'],
+    datas=[],
+    hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],
+    excludes=['PIL.ImageTk', 'cv2', 'imageio', 'matplotlib', 'numpy', 'tkinter'],
     noarchive=False,
     optimize=0,
 )
